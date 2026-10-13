@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       week:
-        description: "Last week to update (1-18)"
+        description: "Week to update (1-14)"
         required: true
         default: "1"
 
@@ -40,14 +40,10 @@ jobs:
           if (process.env.EVENT_NAME === "workflow_dispatch") {
             const week = Number(process.env.MANUAL_WEEK);
 
-                      if (week < 1 || week > 14) {
-            console.log("Regular season is complete. Skipping update.");
-            fs.appendFileSync(
-              process.env.GITHUB_OUTPUT,
-              "skip=true\n"
-            );
-            process.exit(0);
-          }
+            if (!Number.isInteger(week) || week < 1 || week > 14) {
+              throw new Error("Week must be between 1 and 14.");
+            }
+
             fs.appendFileSync(
               process.env.GITHUB_OUTPUT,
               `week=${week}\nskip=false\n`
@@ -89,7 +85,16 @@ jobs:
             (today - firstUpdate) / (7 * 24 * 60 * 60 * 1000)
           ) + 1;
 
-          if (week < 1 || week > 18) {
+          if (week > 14) {
+            console.log("Week 14 reached. Skipping update.");
+            fs.appendFileSync(
+              process.env.GITHUB_OUTPUT,
+              "skip=true\n"
+            );
+            process.exit(0);
+          }
+
+          if (week < 1) {
             throw new Error(`Calculated invalid week: ${week}`);
           }
 
@@ -98,14 +103,15 @@ jobs:
             `week=${week}\nskip=false\n`
           );
 
-          console.log(`Updating through Week ${week}.`);
+          console.log(`Updating Week ${week}.`);
           NODE
 
-      -       - name: Fetch weekly data
+      - name: Fetch weekly data
         if: steps.target.outputs.skip != 'true'
         env:
           WEEK: ${{ steps.target.outputs.week }}
         run: node scripts/update-data.js
+
       - name: Save updated data
         if: steps.target.outputs.skip != 'true'
         run: |
