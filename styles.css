@@ -218,6 +218,26 @@ footer p {
   margin: 4px 0;
 }
 
+/* Standings movement indicators */
+.rank-movement {
+  display: inline-block;
+  min-width: 3.5rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rank-up {
+  color: #15803d;
+}
+
+.rank-down {
+  color: #dc2626;
+}
+
+.rank-same {
+  color: #6b7280;
+}
+
 @media (max-width: 700px) {
   .site-header {
     padding: 36px 0;
@@ -232,6 +252,11 @@ footer p {
   }
 
   th,
+  td {
+    padding: 10px;
+  }
+}
+
   td {
     padding: 10px;
   }
