@@ -4,7 +4,7 @@ const path = require("node:path");
 
 const LEAGUE_ID = "183611";
 const SEASON = "2026";
-const WEEK = process.env.WEEK || "5";
+const WEEK = Number(process.env.WEEK);
 
 const API_BASE = "https://www.fleaflicker.com/api";
 const OUTPUT_FILE = path.join(
@@ -23,25 +23,24 @@ async function getJSON(url) {
   return response.json();
 }
 
-function getOptimumPoints(points, label) {
+function getOptimumPoints(points, teamName) {
   const value = points?.total?.optimum?.value;
 
   if (value === undefined || value === null || value === "") {
-    throw new Error(`Missing optimum points for ${label}`);
+    throw new Error(`Missing Optimum Points for ${teamName}`);
   }
 
-  const number = Number(value);
+  const score = Number(value);
 
-  if (!Number.isFinite(number)) {
-    throw new Error(`Invalid optimum points for ${label}`);
+  if (!Number.isFinite(score)) {
+    throw new Error(`Invalid Optimum Points for ${teamName}`);
   }
 
-  return number;
+  return score;
 }
 
 function getTeamId(team, fallbackName) {
   const id = team?.id ?? team?.teamId ?? team?.franchiseId;
-
   return String(id ?? fallbackName);
 }
 
@@ -53,11 +52,15 @@ function getTeamName(team, fallback) {
 }
 
 async function main() {
+  if (!Number.isInteger(WEEK) || WEEK < 1 || WEEK > 18) {
+    throw new Error("Set WEEK to a number between 1 and 18.");
+  }
+
   const params = new URLSearchParams({
     sport: "NFL",
     league_id: LEAGUE_ID,
     season: SEASON,
-    scoring_period: WEEK
+    scoring_period: String(WEEK)
   });
 
   const scoreboard = await getJSON(
@@ -81,7 +84,7 @@ async function main() {
       sport: "NFL",
       league_id: LEAGUE_ID,
       fantasy_game_id: String(gameId),
-      scoring_period: WEEK
+      scoring_period: String(WEEK)
     });
 
     const boxscore = await getJSON(
@@ -123,12 +126,12 @@ async function main() {
   }
 
   const updatedWeek = {
-    week: Number(WEEK),
+    week: WEEK,
     matchups
   };
 
   const existingIndex = seasonData.weeks.findIndex(
-    item => item.week === Number(WEEK)
+    item => item.week === WEEK
   );
 
   if (existingIndex >= 0) {
@@ -148,7 +151,7 @@ async function main() {
   );
 
   console.log(
-    `Saved Week ${WEEK}: ${matchups.length} matchups to ${OUTPUT_FILE}`
+    `Saved Week ${WEEK}: ${matchups.length} matchups.`
   );
 }
 
