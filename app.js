@@ -65,12 +65,11 @@ function getStandings(weeks, selectedWeek) {
     }
   }
 
-  return [...records.values()].sort((a, b) =>
-    b.wins - a.wins ||
-    a.losses - b.losses ||
-    b.pointsFor - a.pointsFor ||
-    a.name.localeCompare(b.name)
-  );
+return [...records.values()].sort((a, b) =>
+  b.wins - a.wins ||
+  b.pointsFor - a.pointsFor ||
+  a.name.localeCompare(b.name)
+);
 }
 
 function renderStandings(selectedWeek) {
