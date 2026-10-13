@@ -176,9 +176,14 @@ async function loadData() {
       throw new Error("Season data has an invalid format.");
     }
 
-    const availableWeeks = seasonData.weeks
-      .filter(week => Array.isArray(week.matchups) && week.matchups.length > 0)
-      .sort((a, b) => a.week - b.week);
+    
+const availableWeeks = seasonData.weeks
+  .filter(week =>
+    week.week <= 14 &&
+    Array.isArray(week.matchups) &&
+    week.matchups.length > 0
+  )
+  .sort((a, b) => a.week - b.week);
 
     weekSelect.innerHTML = availableWeeks.map(week => `
       <option value="${week.week}">Week ${week.week}</option>
