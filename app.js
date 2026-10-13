@@ -30,7 +30,7 @@ function getStandings(weeks, selectedWeek) {
   const records = new Map();
 
   for (const week of weeks) {
-    if (week.week > selectedWeek) continue;
+    if (week.week > selectedWeek || week.week > 14) continue;
 
     for (const matchup of week.matchups) {
       for (const team of [matchup.away, matchup.home]) {
@@ -65,15 +65,38 @@ function getStandings(weeks, selectedWeek) {
     }
   }
 
-return [...records.values()].sort((a, b) =>
-  b.wins - a.wins ||
-  b.pointsFor - a.pointsFor ||
-  a.name.localeCompare(b.name)
-);
+  return [...records.values()].sort((a, b) =>
+    b.wins - a.wins ||
+    b.pointsFor - a.pointsFor ||
+    a.name.localeCompare(b.name)
+  );
 }
 
 function renderStandings(selectedWeek) {
   const standings = getStandings(seasonData.weeks, selectedWeek);
+
+  // Find each team's position in the previous available week.
+  const previousWeek = seasonData.weeks
+    .filter(week =>
+      week.week < selectedWeek &&
+      week.week <= 14 &&
+      Array.isArray(week.matchups) &&
+      week.matchups.length > 0
+    )
+    .sort((a, b) => b.week - a.week)[0];
+
+  const previousRanks = new Map();
+
+  if (previousWeek) {
+    const previousStandings = getStandings(
+      seasonData.weeks,
+      previousWeek.week
+    );
+
+    previousStandings.forEach((team, index) => {
+      previousRanks.set(team.id, index + 1);
+    });
+  }
 
   standingsElement.innerHTML = `
     <div class="table-wrap">
@@ -81,6 +104,7 @@ function renderStandings(selectedWeek) {
         <thead>
           <tr>
             <th>#</th>
+            <th>Movement</th>
             <th>Team</th>
             <th>W</th>
             <th>L</th>
@@ -89,16 +113,43 @@ function renderStandings(selectedWeek) {
           </tr>
         </thead>
         <tbody>
-          ${standings.map((team, index) => `
-            <tr>
-              <td>${index + 1}</td>
-              <td class="team-name">${escapeHTML(team.name)}</td>
-              <td>${team.wins}</td>
-              <td>${team.losses}</td>
-              <td>${team.ties}</td>
-              <td>${formatPoints(team.pointsFor)}</td>
-            </tr>
-          `).join("")}
+          ${standings.map((team, index) => {
+            const currentRank = index + 1;
+            const previousRank = previousRanks.get(team.id);
+
+            let movement = "—";
+            let movementClass = "rank-same";
+
+            if (previousRank !== undefined) {
+              const difference = previousRank - currentRank;
+
+              if (difference > 0) {
+                movement = `▲ +${difference}`;
+                movementClass = "rank-up";
+              } else if (difference < 0) {
+                movement = `▼ ${difference}`;
+                movementClass = "rank-down";
+              } else {
+                movement = "— 0";
+              }
+            }
+
+            return `
+              <tr>
+                <td>${currentRank}</td>
+                <td>
+                  <span class="rank-movement ${movementClass}">
+                    ${movement}
+                  </span>
+                </td>
+                <td class="team-name">${escapeHTML(team.name)}</td>
+                <td>${team.wins}</td>
+                <td>${team.losses}</td>
+                <td>${team.ties}</td>
+                <td>${formatPoints(team.pointsFor)}</td>
+              </tr>
+            `;
+          }).join("")}
         </tbody>
       </table>
     </div>
@@ -106,10 +157,13 @@ function renderStandings(selectedWeek) {
 }
 
 function renderMatchups(selectedWeek) {
-  const week = seasonData.weeks.find(item => item.week === selectedWeek);
+  const week = seasonData.weeks.find(
+    item => item.week === selectedWeek && item.week <= 14
+  );
 
   if (!week || !week.matchups.length) {
-    matchupsElement.innerHTML = "<p>No results available for this week yet.</p>";
+    matchupsElement.innerHTML =
+      "<p>No results available for this week yet.</p>";
     return;
   }
 
@@ -120,6 +174,7 @@ function renderMatchups(selectedWeek) {
         const home = matchup.home;
 
         let winnerId = null;
+
         if (away.optimum > home.optimum) winnerId = away.id;
         if (home.optimum > away.optimum) winnerId = home.id;
 
@@ -156,6 +211,7 @@ function renderMatchups(selectedWeek) {
 
 function render() {
   const selectedWeek = Number(weekSelect.value);
+
   renderStandings(selectedWeek);
   renderMatchups(selectedWeek);
 }
@@ -167,7 +223,9 @@ async function loadData() {
     const response = await fetch(`${DATA_URL}?v=${Date.now()}`);
 
     if (!response.ok) {
-      throw new Error(`Could not load season data (${response.status}).`);
+      throw new Error(
+        `Could not load season data (${response.status}).`
+      );
     }
 
     seasonData = await response.json();
@@ -176,14 +234,13 @@ async function loadData() {
       throw new Error("Season data has an invalid format.");
     }
 
-    
-const availableWeeks = seasonData.weeks
-  .filter(week =>
-    week.week <= 14 &&
-    Array.isArray(week.matchups) &&
-    week.matchups.length > 0
-  )
-  .sort((a, b) => a.week - b.week);
+    const availableWeeks = seasonData.weeks
+      .filter(week =>
+        week.week <= 14 &&
+        Array.isArray(week.matchups) &&
+        week.matchups.length > 0
+      )
+      .sort((a, b) => a.week - b.week);
 
     weekSelect.innerHTML = availableWeeks.map(week => `
       <option value="${week.week}">Week ${week.week}</option>
@@ -193,7 +250,10 @@ const availableWeeks = seasonData.weeks
       throw new Error("No weekly results are available yet.");
     }
 
-    weekSelect.value = String(availableWeeks[availableWeeks.length - 1].week);
+    weekSelect.value = String(
+      availableWeeks[availableWeeks.length - 1].week
+    );
+
     updatedElement.textContent = seasonData.updatedAt
       ? new Date(seasonData.updatedAt).toLocaleString()
       : "Not available";
@@ -202,6 +262,7 @@ const availableWeeks = seasonData.weeks
     statusElement.textContent = "";
   } catch (error) {
     console.error(error);
+
     statusElement.textContent =
       "Season data could not be loaded. The data file may not have been created yet.";
   }
