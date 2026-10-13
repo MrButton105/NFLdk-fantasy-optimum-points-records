@@ -97,14 +97,11 @@ jobs:
           console.log(`Updating through Week ${week}.`);
           NODE
 
-      - name: Fetch weekly data
+      -       - name: Fetch weekly data
         if: steps.target.outputs.skip != 'true'
-        run: |
-          for week in $(seq 1 ${{ steps.target.outputs.week }}); do
-            echo "Updating Week $week..."
-            WEEK=$week node scripts/update-data.js
-          done
-
+        env:
+          WEEK: ${{ steps.target.outputs.week }}
+        run: node scripts/update-data.js
       - name: Save updated data
         if: steps.target.outputs.skip != 'true'
         run: |
