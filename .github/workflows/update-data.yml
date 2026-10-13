@@ -1,0 +1,120 @@
+
+name: Update Optimum Points Data
+
+on:
+  schedule:
+    - cron: "0 12 * * 4"
+    - cron: "0 13 * * 4"
+  workflow_dispatch:
+    inputs:
+      week:
+        description: "Last week to update (1-18)"
+        required: true
+        default: "1"
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Determine week to update
+        id: target
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          MANUAL_WEEK: ${{ inputs.week }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+
+          if (process.env.EVENT_NAME === "workflow_dispatch") {
+            const week = Number(process.env.MANUAL_WEEK);
+
+            if (!Number.isInteger(week) || week < 1 || week > 18) {
+              throw new Error("Week must be between 1 and 18.");
+            }
+
+            fs.appendFileSync(
+              process.env.GITHUB_OUTPUT,
+              `week=${week}\nskip=false\n`
+            );
+            process.exit(0);
+          }
+
+          const parts = new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Europe/Copenhagen",
+            weekday: "short",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            hourCycle: "h23"
+          }).formatToParts(new Date());
+
+          const values = Object.fromEntries(
+            parts.map(part => [part.type, part.value])
+          );
+
+          if (values.weekday !== "Thu" || values.hour !== "14") {
+            console.log("Not 14:00 in Copenhagen. Skipping this run.");
+            fs.appendFileSync(
+              process.env.GITHUB_OUTPUT,
+              "skip=true\n"
+            );
+            process.exit(0);
+          }
+
+          const today = Date.UTC(
+            Number(values.year),
+            Number(values.month) - 1,
+            Number(values.day)
+          );
+
+          const firstUpdate = Date.UTC(2026, 8, 17);
+          const week = Math.floor(
+            (today - firstUpdate) / (7 * 24 * 60 * 60 * 1000)
+          ) + 1;
+
+          if (week < 1 || week > 18) {
+            throw new Error(`Calculated invalid week: ${week}`);
+          }
+
+          fs.appendFileSync(
+            process.env.GITHUB_OUTPUT,
+            `week=${week}\nskip=false\n`
+          );
+
+          console.log(`Updating through Week ${week}.`);
+          NODE
+
+      - name: Fetch weekly data
+        if: steps.target.outputs.skip != 'true'
+        run: |
+          for week in $(seq 1 ${{ steps.target.outputs.week }}); do
+            echo "Updating Week $week..."
+            WEEK=$week node scripts/update-data.js
+          done
+
+      - name: Save updated data
+        if: steps.target.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/season.json
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Update Optimum Points data"
+            git push
+          else
+            echo "No data changes to commit."
+          fi
