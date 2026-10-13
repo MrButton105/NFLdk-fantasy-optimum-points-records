@@ -40,10 +40,14 @@ jobs:
           if (process.env.EVENT_NAME === "workflow_dispatch") {
             const week = Number(process.env.MANUAL_WEEK);
 
-            if (!Number.isInteger(week) || week < 1 || week > 18) {
-              throw new Error("Week must be between 1 and 18.");
-            }
-
+                      if (week < 1 || week > 14) {
+            console.log("Regular season is complete. Skipping update.");
+            fs.appendFileSync(
+              process.env.GITHUB_OUTPUT,
+              "skip=true\n"
+            );
+            process.exit(0);
+          }
             fs.appendFileSync(
               process.env.GITHUB_OUTPUT,
               `week=${week}\nskip=false\n`
