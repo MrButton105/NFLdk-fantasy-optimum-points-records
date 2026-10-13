@@ -1,7 +1,7 @@
 {
   "leagueId": 183611,
   "season": 2026,
-  "updatedAt": "2026-10-13T20:33:42.274Z",
+  "updatedAt": "2026-10-13T20:39:49.325Z",
   "weeks": [
     {
       "week": 1,
@@ -191,6 +191,294 @@
             "id": "1247161",
             "name": "Bumblebeelievers",
             "optimum": 107.58
+          }
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "matchups": [
+        {
+          "id": "58588615",
+          "away": {
+            "id": "1246100",
+            "name": "Baymodo",
+            "optimum": 138.54
+          },
+          "home": {
+            "id": "1246209",
+            "name": "Urban Legend",
+            "optimum": 126.76
+          }
+        },
+        {
+          "id": "58588614",
+          "away": {
+            "id": "1246991",
+            "name": "Daejon’t Love me like MrButton do",
+            "optimum": 105.18
+          },
+          "home": {
+            "id": "1246200",
+            "name": "Winning(?) Easley",
+            "optimum": 158.16
+          }
+        },
+        {
+          "id": "58588613",
+          "away": {
+            "id": "1247160",
+            "name": "The Mullet Mafia",
+            "optimum": 126.02
+          },
+          "home": {
+            "id": "1246104",
+            "name": "Cooper's Kupp Noodles",
+            "optimum": 102.44
+          }
+        },
+        {
+          "id": "58588612",
+          "away": {
+            "id": "1247161",
+            "name": "Bumblebeelievers",
+            "optimum": 129.18
+          },
+          "home": {
+            "id": "1246072",
+            "name": "Bryce Up Son",
+            "optimum": 158.92
+          }
+        },
+        {
+          "id": "58588611",
+          "away": {
+            "id": "1247165",
+            "name": "Beating my Woodhead",
+            "optimum": 101.1
+          },
+          "home": {
+            "id": "1246046",
+            "name": "Gurley Gris",
+            "optimum": 167.54
+          }
+        },
+        {
+          "id": "58588610",
+          "away": {
+            "id": "1247176",
+            "name": "Everybody sucks!",
+            "optimum": 152.58
+          },
+          "home": {
+            "id": "1246041",
+            "name": "Team Joe",
+            "optimum": 109.24
+          }
+        },
+        {
+          "id": "58588616",
+          "away": {
+            "id": "1247227",
+            "name": "nix pille",
+            "optimum": 133.34
+          },
+          "home": {
+            "id": "1247425",
+            "name": "Golden Receivers",
+            "optimum": 108.36
+          }
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "matchups": [
+        {
+          "id": "58588619",
+          "away": {
+            "id": "1246072",
+            "name": "Bryce Up Son",
+            "optimum": 159.96
+          },
+          "home": {
+            "id": "1246100",
+            "name": "Baymodo",
+            "optimum": 170.02
+          }
+        },
+        {
+          "id": "58588618",
+          "away": {
+            "id": "1246104",
+            "name": "Cooper's Kupp Noodles",
+            "optimum": 87.2
+          },
+          "home": {
+            "id": "1246046",
+            "name": "Gurley Gris",
+            "optimum": 145.9
+          }
+        },
+        {
+          "id": "58588617",
+          "away": {
+            "id": "1246200",
+            "name": "Winning(?) Easley",
+            "optimum": 143.04
+          },
+          "home": {
+            "id": "1246041",
+            "name": "Team Joe",
+            "optimum": 95.18
+          }
+        },
+        {
+          "id": "58588623",
+          "away": {
+            "id": "1246209",
+            "name": "Urban Legend",
+            "optimum": 157.02
+          },
+          "home": {
+            "id": "1247425",
+            "name": "Golden Receivers",
+            "optimum": 103.38
+          }
+        },
+        {
+          "id": "58588622",
+          "away": {
+            "id": "1246991",
+            "name": "Daejon’t Love me like MrButton do",
+            "optimum": 78.22
+          },
+          "home": {
+            "id": "1247227",
+            "name": "nix pille",
+            "optimum": 134.12
+          }
+        },
+        {
+          "id": "58588621",
+          "away": {
+            "id": "1247160",
+            "name": "The Mullet Mafia",
+            "optimum": 155.2
+          },
+          "home": {
+            "id": "1247176",
+            "name": "Everybody sucks!",
+            "optimum": 152.48
+          }
+        },
+        {
+          "id": "58588620",
+          "away": {
+            "id": "1247161",
+            "name": "Bumblebeelievers",
+            "optimum": 154.76
+          },
+          "home": {
+            "id": "1247165",
+            "name": "Beating my Woodhead",
+            "optimum": 141.34
+          }
+        }
+      ]
+    },
+    {
+      "week": 5,
+      "matchups": [
+        {
+          "id": "58588624",
+          "away": {
+            "id": "1246041",
+            "name": "Team Joe",
+            "optimum": 122.14
+          },
+          "home": {
+            "id": "1246100",
+            "name": "Baymodo",
+            "optimum": 156.2
+          }
+        },
+        {
+          "id": "58588630",
+          "away": {
+            "id": "1246046",
+            "name": "Gurley Gris",
+            "optimum": 128.54001
+          },
+          "home": {
+            "id": "1247425",
+            "name": "Golden Receivers",
+            "optimum": 90.1
+          }
+        },
+        {
+          "id": "58588629",
+          "away": {
+            "id": "1246072",
+            "name": "Bryce Up Son",
+            "optimum": 121.94
+          },
+          "home": {
+            "id": "1247227",
+            "name": "nix pille",
+            "optimum": 144.4
+          }
+        },
+        {
+          "id": "58588628",
+          "away": {
+            "id": "1246104",
+            "name": "Cooper's Kupp Noodles",
+            "optimum": 110.24
+          },
+          "home": {
+            "id": "1247176",
+            "name": "Everybody sucks!",
+            "optimum": 149.48
+          }
+        },
+        {
+          "id": "58588627",
+          "away": {
+            "id": "1246200",
+            "name": "Winning(?) Easley",
+            "optimum": 157.26
+          },
+          "home": {
+            "id": "1247165",
+            "name": "Beating my Woodhead",
+            "optimum": 161.86
+          }
+        },
+        {
+          "id": "58588626",
+          "away": {
+            "id": "1246209",
+            "name": "Urban Legend",
+            "optimum": 107.5
+          },
+          "home": {
+            "id": "1247161",
+            "name": "Bumblebeelievers",
+            "optimum": 121.02
+          }
+        },
+        {
+          "id": "58588625",
+          "away": {
+            "id": "1246991",
+            "name": "Daejon’t Love me like MrButton do",
+            "optimum": 79.659996
+          },
+          "home": {
+            "id": "1247160",
+            "name": "The Mullet Mafia",
+            "optimum": 130.94
           }
         }
       ]
