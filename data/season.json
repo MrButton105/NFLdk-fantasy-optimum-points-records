@@ -1,7 +1,103 @@
-
 {
   "leagueId": 183611,
   "season": 2026,
-  "updatedAt": null,
-  "weeks": []
+  "updatedAt": "2026-10-13T20:19:00.783Z",
+  "weeks": [
+    {
+      "week": 1,
+      "matchups": [
+        {
+          "id": "58588601",
+          "away": {
+            "id": "1246041",
+            "name": "Team Joe",
+            "optimum": 111.659996
+          },
+          "home": {
+            "id": "1247165",
+            "name": "Beating my Woodhead",
+            "optimum": 87.9
+          }
+        },
+        {
+          "id": "58588600",
+          "away": {
+            "id": "1246046",
+            "name": "Gurley Gris",
+            "optimum": 151.76
+          },
+          "home": {
+            "id": "1247161",
+            "name": "Bumblebeelievers",
+            "optimum": 95.7
+          }
+        },
+        {
+          "id": "58588599",
+          "away": {
+            "id": "1246072",
+            "name": "Bryce Up Son",
+            "optimum": 151.24
+          },
+          "home": {
+            "id": "1247160",
+            "name": "The Mullet Mafia",
+            "optimum": 172.6
+          }
+        },
+        {
+          "id": "58588598",
+          "away": {
+            "id": "1246104",
+            "name": "Cooper's Kupp Noodles",
+            "optimum": 124.36
+          },
+          "home": {
+            "id": "1246991",
+            "name": "Daejon’t Love me like MrButton do",
+            "optimum": 95.1
+          }
+        },
+        {
+          "id": "58588597",
+          "away": {
+            "id": "1246200",
+            "name": "Winning(?) Easley",
+            "optimum": 161.06
+          },
+          "home": {
+            "id": "1246209",
+            "name": "Urban Legend",
+            "optimum": 90.12
+          }
+        },
+        {
+          "id": "58588596",
+          "away": {
+            "id": "1247227",
+            "name": "nix pille",
+            "optimum": 132.56
+          },
+          "home": {
+            "id": "1246100",
+            "name": "Baymodo",
+            "optimum": 192.2
+          }
+        },
+        {
+          "id": "58588602",
+          "away": {
+            "id": "1247425",
+            "name": "Golden Receivers",
+            "optimum": 133.9
+          },
+          "home": {
+            "id": "1247176",
+            "name": "Everybody sucks!",
+            "optimum": 155.28
+          }
+        }
+      ]
+    }
+  ]
 }
