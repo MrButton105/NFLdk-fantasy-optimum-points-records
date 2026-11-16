@@ -1,10 +1,12 @@
-
 name: Update Optimum Points Data
 
 on:
   schedule:
     - cron: "0 12 * * 4"
     - cron: "0 13 * * 4"
+  push:
+    paths:
+      - ".github/workflows/update-data.yml"
   workflow_dispatch:
     inputs:
       week:
@@ -28,7 +30,7 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Determine week to update
+      - name: Determine weeks to update
         id: target
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -44,10 +46,7 @@ jobs:
               throw new Error("Week must be between 1 and 14.");
             }
 
-            fs.appendFileSync(
-              process.env.GITHUB_OUTPUT,
-              `week=${week}\nskip=false\n`
-            );
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `weeks=${week}\nskip=false\n`);
             process.exit(0);
           }
 
@@ -61,16 +60,12 @@ jobs:
             hourCycle: "h23"
           }).formatToParts(new Date());
 
-          const values = Object.fromEntries(
-            parts.map(part => [part.type, part.value])
-          );
+          const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
 
-          if (values.weekday !== "Thu" || values.hour !== "14") {
-            console.log("Not 14:00 in Copenhagen. Skipping this run.");
-            fs.appendFileSync(
-              process.env.GITHUB_OUTPUT,
-              "skip=true\n"
-            );
+          if (process.env.EVENT_NAME !== "push" &&
+              (values.weekday !== "Thu" || Number(values.hour) < 14)) {
+            console.log("Waiting for Thursday at or after 14:00 Copenhagen time.");
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, "skip=true\n");
             process.exit(0);
           }
 
@@ -81,36 +76,42 @@ jobs:
           );
 
           const firstUpdate = Date.UTC(2026, 8, 17);
-          const week = Math.floor(
-            (today - firstUpdate) / (7 * 24 * 60 * 60 * 1000)
-          ) + 1;
+          const targetWeek = Math.floor((today - firstUpdate) / (7 * 24 * 60 * 60 * 1000)) + 1;
 
-          if (week > 14) {
-            console.log("Week 14 reached. Skipping update.");
-            fs.appendFileSync(
-              process.env.GITHUB_OUTPUT,
-              "skip=true\n"
-            );
+          if (targetWeek < 1) {
+            throw new Error(`Calculated invalid week: ${targetWeek}`);
+          }
+
+          const season = JSON.parse(fs.readFileSync("data/season.json", "utf8"));
+          const existingWeeks = new Set(season.weeks.map(item => Number(item.week)));
+          const missingWeeks = [];
+
+          for (let week = 1; week <= Math.min(targetWeek, 14); week++) {
+            if (!existingWeeks.has(week)) missingWeeks.push(week);
+          }
+
+          if (missingWeeks.length === 0) {
+            console.log("No missing weeks to update.");
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, "skip=true\n");
             process.exit(0);
           }
 
-          if (week < 1) {
-            throw new Error(`Calculated invalid week: ${week}`);
-          }
-
+          console.log(`Updating missing weeks: ${missingWeeks.join(", ")}`);
           fs.appendFileSync(
             process.env.GITHUB_OUTPUT,
-            `week=${week}\nskip=false\n`
+            `weeks=${missingWeeks.join(",")}\nskip=false\n`
           );
-
-          console.log(`Updating Week ${week}.`);
           NODE
 
       - name: Fetch weekly data
         if: steps.target.outputs.skip != 'true'
         env:
-          WEEK: ${{ steps.target.outputs.week }}
-        run: node scripts/update-data.js
+          WEEKS: ${{ steps.target.outputs.weeks }}
+        run: |
+          for week in $(echo "$WEEKS" | tr ',' ' '); do
+            echo "Fetching Week $week"
+            WEEK="$week" node scripts/update-data.js
+          done
 
       - name: Save updated data
         if: steps.target.outputs.skip != 'true'
