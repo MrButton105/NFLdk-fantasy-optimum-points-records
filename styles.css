@@ -439,3 +439,60 @@ footer p {
     justify-self: center;
   }
 }
+
+
+/* Playoff teams appended as a hatched note below the non-playoff picks */
+.draft-table .playoff-appendix-heading td {
+  padding: 14px;
+  white-space: normal;
+  background: #f0f2f1;
+  border-top: 2px solid #c8cfca;
+  border-bottom: 1px solid #d5dbd7;
+}
+
+.playoff-appendix-heading strong,
+.playoff-appendix-heading span {
+  display: block;
+}
+
+.playoff-appendix-heading strong {
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.playoff-appendix-heading span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.draft-table .playoff-appendix-row td {
+  background-color: #f7f8f7;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgb(105 117 134 / 9%) 0,
+    rgb(105 117 134 / 9%) 5px,
+    transparent 5px,
+    transparent 11px
+  );
+  color: #626d78;
+}
+
+.draft-table .playoff-appendix-row .playoff-pick {
+  color: #626d78;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.playoff-determined {
+  display: inline-block;
+  padding: 3px 8px;
+  border: 1px solid #cbd2ce;
+  border-radius: 5px;
+  background: rgb(255 255 255 / 75%);
+  color: #59645d;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
