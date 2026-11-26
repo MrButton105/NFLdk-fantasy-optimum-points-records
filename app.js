@@ -253,21 +253,32 @@ function renderDraftOrder() {
   draftOrderElement.innerHTML = `
     <div class="playoff-status">
       <div class="playoff-status-heading">
-        <h3>Currently in the playoffs</h3>
+        <h3>Playoff teams · draft position decided in the playoffs</h3>
         <span class="playoff-badge">PO · Fleaflicker #1–6</span>
       </div>
-      <p class="playoff-explanation">
-        These six teams are currently in the Fleaflicker playoff places. Their draft positions will be determined by how far they advance in the playoffs, so they are not assigned picks in the Optimum Points draft order below.
-      </p>
       <div class="playoff-teams">
         ${playoffTeams.map(team => `
           <div class="playoff-team-row">
             <span class="playoff-rank">#${team.rank}</span>
             <span class="playoff-team-name">${escapeHTML(team.name)}</span>
-            <span class="playoff-badge-small">PO</span>
+            <span class="playoff-badge-small">PLAYOFFS</span>
           </div>
         `).join("")}
       </div>
+      <div class="playoff-draft-flow">
+        <div class="playoff-flow-step">
+          <span class="playoff-flow-label">These 6 teams</span>
+          <strong>Compete in the playoffs</strong>
+        </div>
+        <span class="playoff-flow-arrow" aria-hidden="true">→</span>
+        <div class="playoff-flow-step playoff-flow-result">
+          <span class="playoff-flow-label">Draft position</span>
+          <strong>Determined by playoff finish</strong>
+        </div>
+      </div>
+      <p class="playoff-explanation">
+        These teams are not ranked by Optimum Points Record and do not receive Picks 1–8 below. Their final draft spots are determined by how far they advance in the Fleaflicker playoffs.
+      </p>
     </div>
     <div class="draft-order-heading">
       <h3>Non-playoff teams · projected draft order</h3>
