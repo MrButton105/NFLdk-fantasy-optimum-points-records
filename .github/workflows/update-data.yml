@@ -107,8 +107,10 @@ jobs:
             WEEK="$week" node scripts/update-data.js
           done
 
+      - name: Fetch current Fleaflicker standings
+        run: node scripts/update-standings.js
+
       - name: Save updated data
-        if: steps.target.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
