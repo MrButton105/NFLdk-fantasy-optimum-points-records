@@ -251,38 +251,9 @@ function renderDraftOrder() {
   });
 
   draftOrderElement.innerHTML = `
-    <div class="playoff-status">
-      <div class="playoff-status-heading">
-        <h3>Playoff teams · draft position decided in the playoffs</h3>
-        <span class="playoff-badge">PO · Fleaflicker #1–6</span>
-      </div>
-      <div class="playoff-teams">
-        ${playoffTeams.map(team => `
-          <div class="playoff-team-row">
-            <span class="playoff-rank">#${team.rank}</span>
-            <span class="playoff-team-name">${escapeHTML(team.name)}</span>
-            <span class="playoff-badge-small">PLAYOFFS</span>
-          </div>
-        `).join("")}
-      </div>
-      <div class="playoff-draft-flow">
-        <div class="playoff-flow-step">
-          <span class="playoff-flow-label">These 6 teams</span>
-          <strong>Compete in the playoffs</strong>
-        </div>
-        <span class="playoff-flow-arrow" aria-hidden="true">→</span>
-        <div class="playoff-flow-step playoff-flow-result">
-          <span class="playoff-flow-label">Draft position</span>
-          <strong>Determined by playoff finish</strong>
-        </div>
-      </div>
-      <p class="playoff-explanation">
-        These teams are not ranked by Optimum Points Record and do not receive Picks 1–8 below. Their final draft spots are determined by how far they advance in the Fleaflicker playoffs.
-      </p>
-    </div>
     <div class="draft-order-heading">
-      <h3>Non-playoff teams · projected draft order</h3>
-      <p class="playoff-explanation">These eight teams are ordered by Optimum Points Record. The worst record receives Pick 1; total Optimum Points For is the tiebreaker.</p>
+      <h3>Projected draft order · non-playoff teams</h3>
+      <p class="playoff-explanation">The eight teams outside the Fleaflicker playoff places receive Picks 1–8, ordered by Optimum Points Record. The worst record receives Pick 1; total Optimum Points For is the tiebreaker.</p>
     </div>
     <div class="table-wrap">
       <table class="draft-table">
@@ -307,6 +278,20 @@ function renderDraftOrder() {
               <td>${team.optimum
                 ? formatPoints(team.optimum.pointsFor)
                 : "—"}</td>
+            </tr>
+          `).join("")}
+          <tr class="playoff-appendix-heading">
+            <td colspan="5">
+              <strong>Playoff teams · draft position determined by playoff finish</strong>
+              <span>These teams are shown for completeness only. Their draft spots are decided in the playoffs, not by Optimum Points Record.</span>
+            </td>
+          </tr>
+          ${playoffTeams.map(team => `
+            <tr class="playoff-appendix-row">
+              <td class="playoff-pick">TBD</td>
+              <td class="fleaflicker-rank">#${team.rank}</td>
+              <td class="draft-team">${escapeHTML(team.name)}</td>
+              <td colspan="2"><span class="playoff-determined">Determined by playoff finish</span></td>
             </tr>
           `).join("")}
         </tbody>
