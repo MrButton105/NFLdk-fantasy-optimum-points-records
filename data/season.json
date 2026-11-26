@@ -1,7 +1,7 @@
 {
   "leagueId": 183611,
   "season": 2026,
-  "updatedAt": "2026-11-19T14:05:42.605Z",
+  "updatedAt": "2026-11-26T20:40:03.089Z",
   "weeks": [
     {
       "week": 1,
@@ -959,6 +959,102 @@
             "id": "1246200",
             "name": "Winning Easley",
             "optimum": 197.45999
+          }
+        }
+      ]
+    },
+    {
+      "week": 11,
+      "matchups": [
+        {
+          "id": "58588670",
+          "away": {
+            "id": "1246100",
+            "name": "Baymodo",
+            "optimum": 92.7
+          },
+          "home": {
+            "id": "1246200",
+            "name": "Winning Easley",
+            "optimum": 130.64
+          }
+        },
+        {
+          "id": "58588669",
+          "away": {
+            "id": "1246209",
+            "name": "Urban Legend",
+            "optimum": 143.12
+          },
+          "home": {
+            "id": "1246104",
+            "name": "Cooper's Kupp Noodles",
+            "optimum": 96.659996
+          }
+        },
+        {
+          "id": "58588668",
+          "away": {
+            "id": "1246991",
+            "name": "Daejon’t Love me like MrButton do",
+            "optimum": 94.8
+          },
+          "home": {
+            "id": "1246072",
+            "name": "Bryce Up Son",
+            "optimum": 109.96
+          }
+        },
+        {
+          "id": "58588667",
+          "away": {
+            "id": "1247160",
+            "name": "The Mullet Mafia",
+            "optimum": 120.36
+          },
+          "home": {
+            "id": "1246046",
+            "name": "Gurley Gris",
+            "optimum": 118.3
+          }
+        },
+        {
+          "id": "58588666",
+          "away": {
+            "id": "1247161",
+            "name": "Bumblebeelievers",
+            "optimum": 101.88
+          },
+          "home": {
+            "id": "1246041",
+            "name": "Team Joe",
+            "optimum": 80.04
+          }
+        },
+        {
+          "id": "58588672",
+          "away": {
+            "id": "1247165",
+            "name": "Beating my Woodhead",
+            "optimum": 77.58
+          },
+          "home": {
+            "id": "1247425",
+            "name": "Golden Receivers",
+            "optimum": 108.72
+          }
+        },
+        {
+          "id": "58588671",
+          "away": {
+            "id": "1247176",
+            "name": "Everybody sucks!",
+            "optimum": 134.66
+          },
+          "home": {
+            "id": "1247227",
+            "name": "nix pille",
+            "optimum": 100.86
           }
         }
       ]
