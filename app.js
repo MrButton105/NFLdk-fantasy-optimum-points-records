@@ -286,7 +286,7 @@ function renderDraftOrder() {
               <span>These teams are shown for completeness only. Their draft spots are decided in the playoffs, not by Optimum Points Record.</span>
             </td>
           </tr>
-          ${playoffTeams.map(team => `
+          ${[...playoffTeams].sort((a, b) => Number(b.rank) - Number(a.rank)).map(team => `
             <tr class="playoff-appendix-row">
               <td class="playoff-pick">TBD</td>
               <td class="fleaflicker-rank">#${team.rank}</td>
