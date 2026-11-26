@@ -219,7 +219,12 @@ function renderDraftOrder() {
     ])
   );
 
-  // Fleaflicker's top six are playoff teams and are excluded from draft-order calculations.
+  // Fleaflicker ranks 1–6 are playoff teams; their draft positions are decided in the playoffs.
+  const playoffTeams = fleaTeams
+    .filter(team => Number(team.rank) <= 6)
+    .sort((a, b) => Number(a.rank) - Number(b.rank));
+
+  // The eight non-playoff teams receive draft picks by Optimum Points Record.
   const nonPlayoffTeams = fleaTeams
     .filter(team => Number(team.rank) > 6)
     .map(team => {
@@ -246,6 +251,28 @@ function renderDraftOrder() {
   });
 
   draftOrderElement.innerHTML = `
+    <div class="playoff-status">
+      <div class="playoff-status-heading">
+        <h3>Currently in the playoffs</h3>
+        <span class="playoff-badge">PO · Fleaflicker #1–6</span>
+      </div>
+      <p class="playoff-explanation">
+        These six teams are currently in the Fleaflicker playoff places. Their draft positions will be determined by how far they advance in the playoffs, so they are not assigned picks in the Optimum Points draft order below.
+      </p>
+      <div class="playoff-teams">
+        ${playoffTeams.map(team => `
+          <div class="playoff-team-row">
+            <span class="playoff-rank">#${team.rank}</span>
+            <span class="playoff-team-name">${escapeHTML(team.name)}</span>
+            <span class="playoff-badge-small">PO</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+    <div class="draft-order-heading">
+      <h3>Non-playoff teams · projected draft order</h3>
+      <p class="playoff-explanation">These eight teams are ordered by Optimum Points Record. The worst record receives Pick 1; total Optimum Points For is the tiebreaker.</p>
+    </div>
     <div class="table-wrap">
       <table class="draft-table">
         <thead>
