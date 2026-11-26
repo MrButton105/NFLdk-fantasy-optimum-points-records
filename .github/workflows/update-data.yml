@@ -8,6 +8,7 @@ on:
   push:
     paths:
       - ".github/workflows/update-data.yml"
+      - "scripts/update-standings.js"
   workflow_dispatch:
     inputs:
       week:
