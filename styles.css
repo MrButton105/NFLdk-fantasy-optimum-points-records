@@ -261,3 +261,33 @@ footer p {
     padding: 10px;
   }
 }
+
+
+/* Projected draft order */
+.draft-intro {
+  max-width: 780px;
+}
+
+.draft-table .pick-number {
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.draft-table .fleaflicker-rank {
+  color: var(--muted);
+}
+
+.draft-table .draft-team {
+  font-weight: 700;
+}
+
+.draft-note {
+  margin-top: 12px;
+}
+
+@media (max-width: 700px) {
+  .draft-panel {
+    padding: 18px;
+  }
+}
