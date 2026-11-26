@@ -291,3 +291,92 @@ footer p {
     padding: 18px;
   }
 }
+
+
+/* Clear separation between playoff teams and non-playoff draft order */
+.playoff-status {
+  margin-bottom: 28px;
+  padding: 18px;
+  border: 1px solid #cfe2d5;
+  border-left: 4px solid var(--win);
+  border-radius: 10px;
+  background: #f5faf6;
+}
+
+.playoff-status-heading,
+.draft-order-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.playoff-status h3,
+.draft-order-heading h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.playoff-badge,
+.playoff-badge-small {
+  display: inline-block;
+  border-radius: 5px;
+  background: #e2f1e7;
+  color: #17623d;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+}
+
+.playoff-explanation {
+  margin: 8px 0 14px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.playoff-teams {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+}
+
+.playoff-team-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #e1ece4;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.playoff-rank {
+  min-width: 2rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.playoff-team-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.draft-order-heading {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.draft-order-heading .playoff-explanation {
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .playoff-teams {
+    grid-template-columns: 1fr;
+  }
+}
