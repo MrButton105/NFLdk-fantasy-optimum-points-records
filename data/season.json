@@ -1,7 +1,7 @@
 {
   "leagueId": 183611,
   "season": 2026,
-  "updatedAt": "2026-11-26T20:40:03.089Z",
+  "updatedAt": "2026-11-26T22:20:45.157Z",
   "weeks": [
     {
       "week": 1,
@@ -1061,7 +1061,7 @@
     }
   ],
   "fleaflickerStandings": {
-    "updatedAt": "2026-11-26T20:47:26.682Z",
+    "updatedAt": "2026-11-26T22:20:45.586Z",
     "teams": [
       {
         "id": "1246046",
