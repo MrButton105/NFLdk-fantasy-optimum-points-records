@@ -195,9 +195,14 @@ function renderMatchups(selectedWeek) {
   `;
 }
 
-function renderDraftOrder(selectedWeek) {
+function renderDraftOrder() {
   const leagueStandings = seasonData.fleaflickerStandings;
   const fleaTeams = leagueStandings?.teams;
+  const latestAvailableWeek = Math.max(
+    ...seasonData.weeks
+      .filter(week => week.week <= 14 && Array.isArray(week.matchups) && week.matchups.length > 0)
+      .map(week => Number(week.week))
+  );
 
   if (!Array.isArray(fleaTeams) || fleaTeams.length !== 14) {
     draftOrderElement.innerHTML =
@@ -206,7 +211,7 @@ function renderDraftOrder(selectedWeek) {
     return;
   }
 
-  const optimumStandings = getStandings(seasonData.weeks, selectedWeek);
+  const optimumStandings = getStandings(seasonData.weeks, latestAvailableWeek);
   const optimumById = new Map(
     optimumStandings.map((team, index) => [
       String(team.id),
@@ -280,7 +285,7 @@ function render() {
   const selectedWeek = Number(weekSelect.value);
   renderStandings(selectedWeek);
   renderMatchups(selectedWeek);
-  renderDraftOrder(selectedWeek);
+  renderDraftOrder();
 }
 
 async function loadData() {
