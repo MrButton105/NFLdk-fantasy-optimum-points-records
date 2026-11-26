@@ -260,7 +260,6 @@ function renderDraftOrder() {
         <thead>
           <tr>
             <th>Draft pick</th>
-            <th>Fleaflicker rank</th>
             <th>Team</th>
             <th>Optimum record</th>
             <th>Opt Pts For</th>
@@ -270,7 +269,6 @@ function renderDraftOrder() {
           ${nonPlayoffTeams.map((team, index) => `
             <tr>
               <td class="pick-number">${index + 1}</td>
-              <td class="fleaflicker-rank">#${team.rank}</td>
               <td class="draft-team">${escapeHTML(team.name)}</td>
               <td>${team.optimum
                 ? `${team.optimum.wins}-${team.optimum.losses}-${team.optimum.ties}`
@@ -281,7 +279,7 @@ function renderDraftOrder() {
             </tr>
           `).join("")}
           <tr class="playoff-appendix-heading">
-            <td colspan="5">
+            <td colspan="4">
               <strong>Playoff teams · draft position determined by playoff finish</strong>
               <span>These teams are shown for completeness only. Their draft spots are decided in the playoffs, not by Optimum Points Record.</span>
             </td>
@@ -289,7 +287,6 @@ function renderDraftOrder() {
           ${[...playoffTeams].sort((a, b) => Number(b.rank) - Number(a.rank)).map(team => `
             <tr class="playoff-appendix-row">
               <td class="playoff-pick">TBD</td>
-              <td class="fleaflicker-rank">#${team.rank}</td>
               <td class="draft-team">${escapeHTML(team.name)}</td>
               <td colspan="2"><span class="playoff-determined">Determined by playoff finish</span></td>
             </tr>
