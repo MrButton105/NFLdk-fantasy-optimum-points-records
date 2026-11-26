@@ -496,3 +496,23 @@ footer p {
   font-size: 0.76rem;
   font-weight: 700;
 }
+
+
+/* Week selector at the top controls both weekly matchups and standings */
+.week-selector-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.week-selector-bar label {
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.week-selector-bar select {
+  min-width: 170px;
+}
