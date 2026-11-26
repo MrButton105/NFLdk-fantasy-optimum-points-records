@@ -1,8 +1,9 @@
-
 const DATA_URL = "./data/season.json";
 
 const standingsElement = document.querySelector("#standings");
 const matchupsElement = document.querySelector("#matchups");
+const draftOrderElement = document.querySelector("#draft-order");
+const draftUpdatedElement = document.querySelector("#draft-updated-at");
 const weekSelect = document.querySelector("#week-select");
 const updatedElement = document.querySelector("#updated-at");
 const statusElement = document.querySelector("#status");
@@ -34,9 +35,9 @@ function getStandings(weeks, selectedWeek) {
 
     for (const matchup of week.matchups) {
       for (const team of [matchup.away, matchup.home]) {
-        if (!records.has(team.id)) {
-          records.set(team.id, {
-            id: team.id,
+        if (!records.has(String(team.id))) {
+          records.set(String(team.id), {
+            id: String(team.id),
             name: team.name,
             wins: 0,
             losses: 0,
@@ -46,16 +47,16 @@ function getStandings(weeks, selectedWeek) {
         }
       }
 
-      const away = records.get(matchup.away.id);
-      const home = records.get(matchup.home.id);
+      const away = records.get(String(matchup.away.id));
+      const home = records.get(String(matchup.home.id));
 
       away.pointsFor += Number(matchup.away.optimum);
       home.pointsFor += Number(matchup.home.optimum);
 
-      if (matchup.away.optimum > matchup.home.optimum) {
+      if (Number(matchup.away.optimum) > Number(matchup.home.optimum)) {
         away.wins++;
         home.losses++;
-      } else if (matchup.home.optimum > matchup.away.optimum) {
+      } else if (Number(matchup.home.optimum) > Number(matchup.away.optimum)) {
         home.wins++;
         away.losses++;
       } else {
@@ -75,7 +76,6 @@ function getStandings(weeks, selectedWeek) {
 function renderStandings(selectedWeek) {
   const standings = getStandings(seasonData.weeks, selectedWeek);
 
-  // Find each team's position in the previous available week.
   const previousWeek = seasonData.weeks
     .filter(week =>
       week.week < selectedWeek &&
@@ -88,12 +88,7 @@ function renderStandings(selectedWeek) {
   const previousRanks = new Map();
 
   if (previousWeek) {
-    const previousStandings = getStandings(
-      seasonData.weeks,
-      previousWeek.week
-    );
-
-    previousStandings.forEach((team, index) => {
+    getStandings(seasonData.weeks, previousWeek.week).forEach((team, index) => {
       previousRanks.set(team.id, index + 1);
     });
   }
@@ -116,13 +111,11 @@ function renderStandings(selectedWeek) {
           ${standings.map((team, index) => {
             const currentRank = index + 1;
             const previousRank = previousRanks.get(team.id);
-
             let movement = "—";
             let movementClass = "rank-same";
 
             if (previousRank !== undefined) {
               const difference = previousRank - currentRank;
-
               if (difference > 0) {
                 movement = `▲ +${difference}`;
                 movementClass = "rank-up";
@@ -137,11 +130,7 @@ function renderStandings(selectedWeek) {
             return `
               <tr>
                 <td>${currentRank}</td>
-                <td>
-                  <span class="rank-movement ${movementClass}">
-                    ${movement}
-                  </span>
-                </td>
+                <td><span class="rank-movement ${movementClass}">${movement}</span></td>
                 <td class="team-name">${escapeHTML(team.name)}</td>
                 <td>${team.wins}</td>
                 <td>${team.losses}</td>
@@ -162,8 +151,7 @@ function renderMatchups(selectedWeek) {
   );
 
   if (!week || !week.matchups.length) {
-    matchupsElement.innerHTML =
-      "<p>No results available for this week yet.</p>";
+    matchupsElement.innerHTML = "<p>No results available for this week yet.</p>";
     return;
   }
 
@@ -172,17 +160,15 @@ function renderMatchups(selectedWeek) {
       ${week.matchups.map(matchup => {
         const away = matchup.away;
         const home = matchup.home;
-
         let winnerId = null;
 
-        if (away.optimum > home.optimum) winnerId = away.id;
-        if (home.optimum > away.optimum) winnerId = home.id;
+        if (Number(away.optimum) > Number(home.optimum)) winnerId = away.id;
+        if (Number(home.optimum) > Number(away.optimum)) winnerId = home.id;
 
         function renderTeam(team) {
           const result = winnerId === null
             ? "Tie"
             : winnerId === team.id ? "Win" : "Loss";
-
           const resultClass = winnerId === null
             ? "tie"
             : winnerId === team.id ? "win" : "loss";
@@ -209,11 +195,92 @@ function renderMatchups(selectedWeek) {
   `;
 }
 
+function renderDraftOrder(selectedWeek) {
+  const leagueStandings = seasonData.fleaflickerStandings;
+  const fleaTeams = leagueStandings?.teams;
+
+  if (!Array.isArray(fleaTeams) || fleaTeams.length !== 14) {
+    draftOrderElement.innerHTML =
+      "<p>Current Fleaflicker standings are not available yet. They will appear after the next data refresh.</p>";
+    draftUpdatedElement.textContent = "";
+    return;
+  }
+
+  const optimumStandings = getStandings(seasonData.weeks, selectedWeek);
+  const optimumById = new Map(
+    optimumStandings.map((team, index) => [
+      String(team.id),
+      { ...team, optimumRank: index + 1 }
+    ])
+  );
+
+  // Fleaflicker's top six are playoff teams and are excluded from draft-order calculations.
+  const nonPlayoffTeams = fleaTeams
+    .filter(team => Number(team.rank) > 6)
+    .map(team => {
+      const optimum = optimumById.get(String(team.id));
+      return {
+        ...team,
+        optimum: optimum ?? null
+      };
+    });
+
+  if (nonPlayoffTeams.length !== 8) {
+    draftOrderElement.innerHTML =
+      "<p>Could not identify exactly eight non-playoff teams from Fleaflicker standings.</p>";
+    draftUpdatedElement.textContent = "";
+    return;
+  }
+
+  // Worst Optimum Points Record receives Pick 1; total Optimum Points For breaks ties.
+  nonPlayoffTeams.sort((a, b) => {
+    if (!a.optimum && !b.optimum) return Number(b.rank) - Number(a.rank);
+    if (!a.optimum) return -1;
+    if (!b.optimum) return 1;
+    return b.optimum.optimumRank - a.optimum.optimumRank;
+  });
+
+  draftOrderElement.innerHTML = `
+    <div class="table-wrap">
+      <table class="draft-table">
+        <thead>
+          <tr>
+            <th>Draft pick</th>
+            <th>Fleaflicker rank</th>
+            <th>Team</th>
+            <th>Optimum record</th>
+            <th>Opt Pts For</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${nonPlayoffTeams.map((team, index) => `
+            <tr>
+              <td class="pick-number">${index + 1}</td>
+              <td class="fleaflicker-rank">#${team.rank}</td>
+              <td class="draft-team">${escapeHTML(team.name)}</td>
+              <td>${team.optimum
+                ? `${team.optimum.wins}-${team.optimum.losses}-${team.optimum.ties}`
+                : "—"}</td>
+              <td>${team.optimum
+                ? formatPoints(team.optimum.pointsFor)
+                : "—"}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  draftUpdatedElement.textContent = leagueStandings.updatedAt
+    ? `Fleaflicker standings last refreshed: ${new Date(leagueStandings.updatedAt).toLocaleString()}`
+    : "";
+}
+
 function render() {
   const selectedWeek = Number(weekSelect.value);
-
   renderStandings(selectedWeek);
   renderMatchups(selectedWeek);
+  renderDraftOrder(selectedWeek);
 }
 
 async function loadData() {
@@ -223,9 +290,7 @@ async function loadData() {
     const response = await fetch(`${DATA_URL}?v=${Date.now()}`);
 
     if (!response.ok) {
-      throw new Error(
-        `Could not load season data (${response.status}).`
-      );
+      throw new Error(`Could not load season data (${response.status}).`);
     }
 
     seasonData = await response.json();
@@ -250,9 +315,7 @@ async function loadData() {
       throw new Error("No weekly results are available yet.");
     }
 
-    weekSelect.value = String(
-      availableWeeks[availableWeeks.length - 1].week
-    );
+    weekSelect.value = String(availableWeeks[availableWeeks.length - 1].week);
 
     updatedElement.textContent = seasonData.updatedAt
       ? new Date(seasonData.updatedAt).toLocaleString()
@@ -262,12 +325,10 @@ async function loadData() {
     statusElement.textContent = "";
   } catch (error) {
     console.error(error);
-
     statusElement.textContent =
       "Season data could not be loaded. The data file may not have been created yet.";
   }
 }
 
 weekSelect.addEventListener("change", render);
-
 loadData();
