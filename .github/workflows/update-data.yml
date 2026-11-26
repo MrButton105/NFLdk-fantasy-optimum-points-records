@@ -2,9 +2,10 @@ name: Update Optimum Points Data
 
 on:
   schedule:
-    # Check twice daily so missed or delayed scheduled runs are recovered automatically.
-    - cron: "0 12 * * *"
-    - cron: "0 13 * * *"
+    # GitHub cron uses UTC: 08:00 UTC = 09:00 Copenhagen in winter;
+    # 13:00 UTC = 14:00 Copenhagen in winter.
+    - cron: "0 8 * * 2"
+    - cron: "0 13 * * 4"
   push:
     paths:
       - ".github/workflows/update-data.yml"
@@ -66,9 +67,14 @@ jobs:
             Number(values.day)
           );
 
-          // NFL regular-season Week 1 update anchor: Thursday, 17 September 2026.
+          // Week 1 update anchor is Thursday, 17 September 2026.
+          // Tuesday runs are shifted forward two days so Tuesday and Thursday
+          // both target the same NFL week.
+          const targetDate = today + 2 * 24 * 60 * 60 * 1000;
           const firstUpdate = Date.UTC(2026, 8, 17);
-          const targetWeek = Math.floor((today - firstUpdate) / (7 * 24 * 60 * 60 * 1000)) + 1;
+          const targetWeek = Math.floor(
+            (targetDate - firstUpdate) / (7 * 24 * 60 * 60 * 1000)
+          ) + 1;
 
           if (targetWeek < 1) {
             console.log("The 2026 regular season update window has not started.");
@@ -76,25 +82,28 @@ jobs:
             process.exit(0);
           }
 
-          const cappedWeek = Math.min(targetWeek, 14);
-          const season = JSON.parse(fs.readFileSync("data/season.json", "utf8"));
-          const existingWeeks = new Set(season.weeks.map(item => Number(item.week)));
-          const missingWeeks = [];
-
-          for (let week = 1; week <= cappedWeek; week++) {
-            if (!existingWeeks.has(week)) missingWeeks.push(week);
-          }
-
-          if (missingWeeks.length === 0) {
-            console.log(`No missing weeks through Week ${cappedWeek}. Season updates stop at Week 14.`);
+          if (targetWeek > 14) {
+            console.log("Week 14 has passed. Regular-season updates are stopped.");
             fs.appendFileSync(process.env.GITHUB_OUTPUT, "skip=true\n");
             process.exit(0);
           }
 
-          console.log(`Updating missing weeks through Week ${cappedWeek}: ${missingWeeks.join(", ")}`);
+          const season = JSON.parse(fs.readFileSync("data/season.json", "utf8"));
+          const existingWeeks = new Set(season.weeks.map(item => Number(item.week)));
+          const weeksToUpdate = [];
+
+          // Backfill any missing weeks, and ALWAYS refresh the current target week.
+          // This second fetch (Thursday) picks up Fleaflicker stat corrections.
+          for (let week = 1; week <= targetWeek; week++) {
+            if (!existingWeeks.has(week) || week === targetWeek) {
+              weeksToUpdate.push(week);
+            }
+          }
+
+          console.log(`Refreshing weeks: ${weeksToUpdate.join(", ")}`);
           fs.appendFileSync(
             process.env.GITHUB_OUTPUT,
-            `weeks=${missingWeeks.join(",")}\nskip=false\n`
+            `weeks=${weeksToUpdate.join(",")}\nskip=false\n`
           );
           NODE
 
@@ -104,14 +113,16 @@ jobs:
           WEEKS: ${{ steps.target.outputs.weeks }}
         run: |
           for week in $(echo "$WEEKS" | tr ',' ' '); do
-            echo "Fetching Week $week"
+            echo "Fetching or refreshing Week $week"
             WEEK="$week" node scripts/update-data.js
           done
 
       - name: Fetch current Fleaflicker standings
+        if: steps.target.outputs.skip != 'true'
         run: node scripts/update-standings.js
 
       - name: Save updated data
+        if: steps.target.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
