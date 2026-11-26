@@ -252,7 +252,7 @@ function renderDraftOrder() {
 
   draftOrderElement.innerHTML = `
     <div class="draft-order-heading">
-      <h3>Projected draft order · non-playoff teams</h3>
+      <h3>Projected draft order</h3>
       <p class="playoff-explanation">The eight teams outside the Fleaflicker playoff places receive Picks 1–8, ordered by Optimum Points Record. The worst record receives Pick 1; total Optimum Points For is the tiebreaker.</p>
     </div>
     <div class="table-wrap">
@@ -261,7 +261,7 @@ function renderDraftOrder() {
           <tr>
             <th>Draft pick</th>
             <th>Team</th>
-            <th>Optimum record</th>
+            <th>Optimum Points Record</th>
             <th>Opt Pts For</th>
           </tr>
         </thead>
