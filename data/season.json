@@ -1059,5 +1059,136 @@
         }
       ]
     }
-  ]
+  ],
+  "fleaflickerStandings": {
+    "updatedAt": "2026-11-26T20:46:13.078Z",
+    "teams": [
+      {
+        "id": "1246046",
+        "name": "Gurley Gris",
+        "rank": 1,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1246200",
+        "name": "Winning Easley",
+        "rank": 2,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1246100",
+        "name": "Baymodo",
+        "rank": 3,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1247176",
+        "name": "Everybody sucks!",
+        "rank": 4,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1247160",
+        "name": "The Mullet Mafia",
+        "rank": 5,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1247227",
+        "name": "nix pille",
+        "rank": 6,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1246072",
+        "name": "Bryce Up Son",
+        "rank": 7,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1247161",
+        "name": "Bumblebeelievers",
+        "rank": 8,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1247425",
+        "name": "Golden Receivers",
+        "rank": 9,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1246209",
+        "name": "Urban Legend",
+        "rank": 10,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1247165",
+        "name": "Beating my Woodhead",
+        "rank": 11,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1246104",
+        "name": "Cooper's Kupp Noodles",
+        "rank": 12,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1246041",
+        "name": "Team Joe",
+        "rank": 13,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      },
+      {
+        "id": "1246991",
+        "name": "Daejon’t Love me like MrButton do",
+        "rank": 14,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "pointsFor": 0
+      }
+    ]
+  }
 }
