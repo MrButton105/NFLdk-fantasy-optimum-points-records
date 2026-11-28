@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "NFL Fantasy Optimum Points",
+  "version": "0.1.0",
+  "description": "Shows the Optimum Points Records dashboard directly on Fleaflicker league 183611.",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.fleaflicker.com/nfl/leagues/183611",
+        "https://www.fleaflicker.com/nfl/leagues/183611/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
